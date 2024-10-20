@@ -18,12 +18,20 @@ using glm::mat4;
 
 glm::mat4 rotationMatrix;
 
-SceneBasic_Uniform::SceneBasic_Uniform() : torus(0.7f, 0.3f, 30, 30) {}
+SceneBasic_Uniform::SceneBasic_Uniform() : 
+    torus(0.7f, 0.3f, 30, 30), 
+    camera(glm::vec3(0.0f, 0.0f, 5.0f), -90.0f, 0.0f),
+    lastTime(0.0f) {}
 
 void SceneBasic_Uniform::initScene()
 {
     compile();
     glEnable(GL_DEPTH_TEST);
+
+    // Initialise move speed and mouse sens
+    camera.setMovementSpeed(10.0f);     
+    camera.setMouseSensitivity(0.2f);
+
     model = mat4(1.0f); // Initialise the model
     view = glm::lookAt(vec3(0.0f, 0.0f, 2.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
     model = glm::rotate(model, glm::radians(-35.0f), vec3(1.0f, 0.0f, 0.0f));
@@ -52,7 +60,11 @@ void SceneBasic_Uniform::compile()
 
 void SceneBasic_Uniform::update( float t )
 {
- 
+    float deltaTime = t - lastTime;
+    lastTime = t;
+
+    camera.update(deltaTime, glfwGetCurrentContext());
+    view = camera.getViewMatrix();
 }
 
 ///////////////////////////////// RENDER

@@ -3,6 +3,7 @@
 
 #include "helper/scene.h"
 #include "helper/torus.h"
+#include "Camera.h"
 
 #include <glad/glad.h>
 #include "helper/glslprogram.h"
@@ -14,6 +15,8 @@ class SceneBasic_Uniform : public Scene
 {
 private:
     Torus torus;
+    float lastTime;
+    Camera camera;
     GLSLProgram prog;
     void setMatrices();
 

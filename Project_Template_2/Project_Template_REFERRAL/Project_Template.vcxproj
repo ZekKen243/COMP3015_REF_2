@@ -146,6 +146,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="C:\Users\Public\OpenGL\src\glad.c" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="helper\glslprogram.cpp" />
     <ClCompile Include="helper\glutils.cpp" />
     <ClCompile Include="helper\teapot.cpp" />
@@ -159,6 +160,7 @@
     <None Include="shader\basic_uniform.vert" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="helper\drawable.h" />
     <ClInclude Include="helper\glslprogram.h" />
     <ClInclude Include="helper\glutils.h" />

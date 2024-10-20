@@ -51,6 +51,9 @@
     <ClCompile Include="helper\trianglemesh.cpp">
       <Filter>helper</Filter>
     </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\basic_uniform.frag">
@@ -96,6 +99,9 @@
     </ClInclude>
     <ClInclude Include="helper\drawable.h">
       <Filter>helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
