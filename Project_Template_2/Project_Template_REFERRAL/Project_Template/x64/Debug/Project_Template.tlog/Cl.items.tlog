@@ -1,5 +1,8 @@
-C:\Users\Public\OpenGL\src\glad.c;Z:\Project_Template - REFERRAL\Lab 1\Project_Template\x64\Debug\glad.obj
-Z:\Project_Template - REFERRAL\Lab 1\helper\glslprogram.cpp;Z:\Project_Template - REFERRAL\Lab 1\Project_Template\x64\Debug\glslprogram.obj
-Z:\Project_Template - REFERRAL\Lab 1\helper\glutils.cpp;Z:\Project_Template - REFERRAL\Lab 1\Project_Template\x64\Debug\glutils.obj
-Z:\Project_Template - REFERRAL\Lab 1\main.cpp;Z:\Project_Template - REFERRAL\Lab 1\Project_Template\x64\Debug\main.obj
-Z:\Project_Template - REFERRAL\Lab 1\scenebasic_uniform.cpp;Z:\Project_Template - REFERRAL\Lab 1\Project_Template\x64\Debug\scenebasic_uniform.obj
+C:\Users\Public\OpenGL\src\glad.c;G:\Ken\Documents\GitHub\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\Project_Template\x64\Debug\glad.obj
+G:\Ken\Documents\GitHub\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\helper\glslprogram.cpp;G:\Ken\Documents\GitHub\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\Project_Template\x64\Debug\glslprogram.obj
+G:\Ken\Documents\GitHub\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\helper\glutils.cpp;G:\Ken\Documents\GitHub\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\Project_Template\x64\Debug\glutils.obj
+G:\Ken\Documents\GitHub\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\helper\teapot.cpp;G:\Ken\Documents\GitHub\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\Project_Template\x64\Debug\teapot.obj
+G:\Ken\Documents\GitHub\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\helper\torus.cpp;G:\Ken\Documents\GitHub\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\Project_Template\x64\Debug\torus.obj
+G:\Ken\Documents\GitHub\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\helper\trianglemesh.cpp;G:\Ken\Documents\GitHub\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\Project_Template\x64\Debug\trianglemesh.obj
+G:\Ken\Documents\GitHub\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\main.cpp;G:\Ken\Documents\GitHub\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\Project_Template\x64\Debug\main.obj
+G:\Ken\Documents\GitHub\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\scenebasic_uniform.cpp;G:\Ken\Documents\GitHub\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\Project_Template\x64\Debug\scenebasic_uniform.obj
