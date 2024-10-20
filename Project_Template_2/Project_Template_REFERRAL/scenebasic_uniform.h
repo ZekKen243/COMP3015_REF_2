@@ -3,6 +3,8 @@
 
 #include "helper/scene.h"
 #include "helper/torus.h"
+#include "helper/plane.h"
+#include "helper/objmesh.h"
 #include "Camera.h"
 
 #include <glad/glad.h>
@@ -14,12 +16,16 @@
 class SceneBasic_Uniform : public Scene
 {
 private:
-    Torus torus;
+    //Torus torus;
+    Plane plane;
+    std::unique_ptr<ObjMesh> mesh;
+
+    // Camera stuff
     float lastTime;
     Camera camera;
     GLSLProgram prog;
-    void setMatrices();
 
+    void setMatrices();
     void compile();
 
 public:

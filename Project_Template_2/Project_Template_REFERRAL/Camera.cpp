@@ -14,7 +14,7 @@ glm::mat4 Camera::getViewMatrix() const {
     return glm::lookAt(position, position + front, up);
 }
 
-///////////////////////////////////////////////////////////////// WASD MOVEMENT + UP AND DOWN
+//////////////////// WASD MOVEMENT + UP AND DOWN
 void Camera::processKeyboard(float deltaTime, GLFWwindow* window) {
     float velocity = movementSpeed * deltaTime;
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
@@ -31,7 +31,7 @@ void Camera::processKeyboard(float deltaTime, GLFWwindow* window) {
         position -= up * velocity;     
 }
 
-//////////////////////////////////////////////////////////////// MOUSE MOVEMENT
+////////////////// MOUSE MOVEMENT
 void Camera::processMouseMovement(float xoffset, float yoffset) {
     xoffset *= mouseSensitivity;
     yoffset *= mouseSensitivity;
@@ -47,7 +47,7 @@ void Camera::processMouseMovement(float xoffset, float yoffset) {
 
     updateCameraVectors();
 }
-//////////////////////////////////////////////////////// UPDATE
+/////////////////////////// UPDATE
 void Camera::update(float deltaTime, GLFWwindow* window) {
     // Process keyboard input
     processKeyboard(deltaTime, window);
