@@ -13,6 +13,7 @@ using std::cerr;
 using std::endl;
 
 #include "helper/glutils.h"
+#include "helper/texture.h"
 
 using glm::vec3;
 using glm::vec4;
@@ -81,6 +82,15 @@ void SceneBasic_Uniform::initScene()
     /*prog.setUniform("Fog.MaxDist", 30.0f);
     prog.setUniform("Fog.MinDist", 1.0f);
     prog.setUniform("Fog.Color", vec3(0.5f, 0.5f, 0.5f));*/
+
+    GLuint brick = Texture::loadTexture("media/texture/brick1.jpg");
+    GLuint moss = Texture::loadTexture("media/texture/moss.png");
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, brick);
+    
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, moss);    
 }
 
 void SceneBasic_Uniform::compile()

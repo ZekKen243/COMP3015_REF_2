@@ -2,8 +2,11 @@
 
 in vec3 Position;
 in vec3 Normal;
+in vec2 TexCoord;
 // flat in vec3 LightIntensity;
 
+layout (binding = 0) uniform sampler2D brickTex;
+layout (binding = 1) uniform sampler2D mossTex;
 layout (location = 0) out vec4 FragColor;
 
 //uniform struct LightInfo
@@ -107,14 +110,23 @@ const float scaleFactor = 1.0 / levels;*/
 vec3 blinnPhong(vec3 position, vec3 n)
 {
     vec3 diffuse = vec3(0), spec = vec3(0);
+
+    vec4 brickTexColor = texture(brickTex, TexCoord);
+    vec4 mossTexColor = texture(mossTex, TexCoord);
+    vec3 texColor = mix(brickTexColor.rgb, mossTexColor.rgb, mossTexColor.a);
+
+
     // Ambient calculation
-    vec3 ambient = Light.La * Material.Ka;
+    //vec3 ambient = Light.La * Material.Ka;
+    vec3 ambient = Light.La * texColor;
 
     // Diffuse calculation
     vec3 s = normalize(Light.Position.xyz - position);
 
     float sDotN = max(dot(s,n), 0.0);
-    diffuse = Material.Kd * sDotN;
+    //diffuse = Material.Kd * sDotN;
+    diffuse = texColor * sDotN;
+
 
     if (sDotN > 0.0) 
     {   
