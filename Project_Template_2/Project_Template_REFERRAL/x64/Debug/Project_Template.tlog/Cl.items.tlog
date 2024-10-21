@@ -1,10 +1,14 @@
 C:\Users\Public\OpenGL\src\glad.c;C:\GitHub repos\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\x64\Debug\glad.obj
 C:\GitHub repos\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\Camera.cpp;C:\GitHub repos\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\x64\Debug\Camera.obj
+C:\GitHub repos\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\helper\cube.cpp;C:\GitHub repos\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\x64\Debug\cube.obj
 C:\GitHub repos\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\helper\glslprogram.cpp;C:\GitHub repos\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\x64\Debug\glslprogram.obj
 C:\GitHub repos\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\helper\glutils.cpp;C:\GitHub repos\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\x64\Debug\glutils.obj
 C:\GitHub repos\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\helper\objmesh.cpp;C:\GitHub repos\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\x64\Debug\objmesh.obj
 C:\GitHub repos\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\helper\plane.cpp;C:\GitHub repos\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\x64\Debug\plane.obj
+C:\GitHub repos\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\helper\skybox.cpp;C:\GitHub repos\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\x64\Debug\skybox.obj
+C:\GitHub repos\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\helper\stb_image.cpp;C:\GitHub repos\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\x64\Debug\stb_image.obj
 C:\GitHub repos\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\helper\teapot.cpp;C:\GitHub repos\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\x64\Debug\teapot.obj
+C:\GitHub repos\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\helper\texture.cpp;C:\GitHub repos\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\x64\Debug\texture.obj
 C:\GitHub repos\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\helper\torus.cpp;C:\GitHub repos\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\x64\Debug\torus.obj
 C:\GitHub repos\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\helper\trianglemesh.cpp;C:\GitHub repos\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\x64\Debug\trianglemesh.obj
 C:\GitHub repos\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\main.cpp;C:\GitHub repos\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\x64\Debug\main.obj

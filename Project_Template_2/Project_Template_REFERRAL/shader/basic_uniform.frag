@@ -38,12 +38,12 @@ uniform struct MaterialInfo
     float Shininess;
 }Material;
 
-uniform struct FogInfo
+/*uniform struct FogInfo
 {
     float MaxDist;
     float MinDist;
     vec3 Color;
-}Fog;
+}Fog;*/
 
 // For toon shading
 /*const int levels = 3;
@@ -134,12 +134,13 @@ void main() {
 
     //FragColor = vec4(Color, 1.0);
 
-    float dist = abs(Position.z);
+    /*float dist = abs(Position.z);
     float fogFactor = (Fog.MaxDist - dist)/(Fog.MaxDist - Fog.MinDist);
     fogFactor = clamp(fogFactor, 0.0, 1.0);
-    vec3 shadeColor = blinnPhong(Position, normalize(Normal));
-    vec3 color = mix(Fog.Color, shadeColor, fogFactor);
+    vec3 shadeColor = blinnPhong(Position, normalize(Normal));*/
 
-    FragColor = vec4(color, 1.0);
-    //FragColor = vec4(blinnPhong(Position, normalize(Normal)), 1.0);
+    //vec3 color = mix(Fog.Color, shadeColor, fogFactor);
+
+    //FragColor = vec4(color, 1.0);
+    FragColor = vec4(blinnPhong(Position, normalize(Normal)), 1.0);
 }

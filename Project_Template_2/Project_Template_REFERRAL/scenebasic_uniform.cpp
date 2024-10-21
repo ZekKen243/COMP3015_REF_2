@@ -24,8 +24,8 @@ glm::mat4 rotationMatrix;
 SceneBasic_Uniform::SceneBasic_Uniform() : 
     tPrev(0),
     //torus(1.75f * 0.75f, 0.75f * 0.75f, 50, 50), 
-    plane(50.0f, 50.0f, 10.0f, 1, 1),
-    teapot(14, glm::mat4(1.0f)),
+    //plane(50.0f, 50.0f, 10.0f, 1, 1),
+    //teapot(14, glm::mat4(1.0f)),
     camera(glm::vec3(0.0f, 0.0f, 5.0f), -90.0f, 0.0f),
     lastTime(0.0f) {
 
@@ -43,7 +43,7 @@ void SceneBasic_Uniform::initScene()
     camera.setMouseSensitivity(0.2f);
 
     model = mat4(1.0f); // Initialise the model
-    view = glm::lookAt(vec3(0.0f, 4.0f, 6.0f), vec3(0.0f, 0.2f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
+    view = glm::lookAt(vec3(1.0f, 1.25f, 1.25f), vec3(0.0f, 0.2f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
 
     /*model = glm::rotate(model, glm::radians(-35.0f), vec3(1.0f, 0.0f, 0.0f));
     model = glm::rotate(model, glm::radians(15.0f), vec3(0.0f, 1.0f, 0.0f));*/
@@ -76,11 +76,11 @@ void SceneBasic_Uniform::initScene()
     prog.setUniform("Spot.Exponent", 50.0f);
     prog.setUniform("Spot.Cutoff", glm::radians(15.0f));*/
 
-    prog.setUniform("Light.L", vec3(0.9f));
+    prog.setUniform("Light.L", vec3(1.0f));
     prog.setUniform("Light.La", vec3(0.5f));
-    prog.setUniform("Fog.MaxDist", 30.0f);
+    /*prog.setUniform("Fog.MaxDist", 30.0f);
     prog.setUniform("Fog.MinDist", 1.0f);
-    prog.setUniform("Fog.Color", vec3(0.5f, 0.5f, 0.5f));
+    prog.setUniform("Fog.Color", vec3(0.5f, 0.5f, 0.5f));*/
 }
 
 void SceneBasic_Uniform::compile()
@@ -129,7 +129,12 @@ void SceneBasic_Uniform::render()
     prog.setUniform("Material.Ka", vec3(0.2f * 0.3f, 0.55f * 0.3f, 0.9f * 0.3f));
     prog.setUniform("Material.Shininess", 100.0f);
 
-    float dist = 0.0f;
+    model = mat4(1.0f);
+    model = glm::rotate(model, glm::radians(-90.0f), vec3(1.0f, 0.0f, 0.0f));
+    setMatrices();
+    cube.render();
+
+    /*float dist = 0.0f;
     for (int i = 0; i < 5; i++)
     {
         model = mat4(1.0f);
@@ -138,7 +143,7 @@ void SceneBasic_Uniform::render()
         setMatrices();
         teapot.render();
         dist += 7.0f;
-    }
+    }*/
 
     /*prog.setUniform("Material.Kd", vec3(0.2f, 0.55f, 0.9f));
     prog.setUniform("Material.Ks", vec3(0.95f, 0.95f, 0.95f));
@@ -151,14 +156,14 @@ void SceneBasic_Uniform::render()
     setMatrices();
     torus.render();*/
 
-    prog.setUniform("Material.Kd", vec3(0.7f, 0.7f, 0.7f));
+    /*prog.setUniform("Material.Kd", vec3(0.7f, 0.7f, 0.7f));
     prog.setUniform("Material.Ks", vec3(0.9f, 0.0f, 0.0f));
     prog.setUniform("Material.Ka", vec3(0.2f, 0.2f, 0.2f));
     prog.setUniform("Material.Shininess", 180.0f);
 
     model = mat4(1.0f);
     setMatrices();
-    plane.render();
+    plane.render();*/
 }
 
 
