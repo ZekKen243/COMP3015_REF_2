@@ -1,1 +1,3 @@
-﻿  Project_Template.vcxproj -> G:\Ken\Documents\GitHub\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\x64\Debug\Project_Template.exe
+﻿  scenebasic_uniform.cpp
+G:\Ken\Documents\GitHub\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\scenebasic_uniform.cpp(134,15): warning C4553: '==': result of expression not used; did you intend '='?
+  Project_Template.vcxproj -> G:\Ken\Documents\GitHub\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\x64\Debug\Project_Template.exe

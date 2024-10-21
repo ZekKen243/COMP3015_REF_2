@@ -21,10 +21,12 @@ private:
     //Torus torus;
     //Plane plane;
     //Teapot teapot;
-    Cube cube;
-    //std::unique_ptr<ObjMesh> mesh;
+    //Cube cube;
+    float rotSpeed;
+    std::unique_ptr<ObjMesh> ogre;
     float tPrev;
     float angle;
+    glm::mat4 view2;
 
     // Camera stuff
     float lastTime;

@@ -39,9 +39,6 @@
     <ClCompile Include="scenebasic_uniform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\Public\OpenGL\src\glad.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="helper\teapot.cpp">
       <Filter>helper</Filter>
     </ClCompile>
@@ -71,6 +68,9 @@
     </ClCompile>
     <ClCompile Include="helper\stb_image.cpp">
       <Filter>helper\stb</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Public\OpenGL\src\glad.c">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

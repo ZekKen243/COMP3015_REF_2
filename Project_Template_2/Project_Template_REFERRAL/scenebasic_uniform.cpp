@@ -24,13 +24,15 @@ glm::mat4 rotationMatrix;
 
 SceneBasic_Uniform::SceneBasic_Uniform() : 
     tPrev(0),
+    angle(0.0f),
+    rotSpeed(glm::pi<float>()/8.0f), 
     //torus(1.75f * 0.75f, 0.75f * 0.75f, 50, 50), 
     //plane(50.0f, 50.0f, 10.0f, 1, 1),
     //teapot(14, glm::mat4(1.0f)),
     camera(glm::vec3(0.0f, 0.0f, 5.0f), -90.0f, 0.0f),
     lastTime(0.0f) {
 
-    //mesh = ObjMesh::load("media/pig_triangulated.obj", true);
+    ogre = ObjMesh::load("media/bs_ears.obj", false, true);
 
 }
 
@@ -83,14 +85,19 @@ void SceneBasic_Uniform::initScene()
     prog.setUniform("Fog.MinDist", 1.0f);
     prog.setUniform("Fog.Color", vec3(0.5f, 0.5f, 0.5f));*/
 
-    GLuint brick = Texture::loadTexture("media/texture/brick1.jpg");
-    GLuint moss = Texture::loadTexture("media/texture/moss.png");
+    /*GLuint brick = Texture::loadTexture("media/texture/brick1.jpg");
+    GLuint moss = Texture::loadTexture("media/texture/moss.png");*/
+
+    GLuint diffTex = Texture::loadTexture("media/texture/ogre_diffuse.png");
+    GLuint normalTex = Texture::loadTexture("media/texture/ogre_normalmap.png");
 
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, brick);
-    
+    glBindTexture(GL_TEXTURE_2D, diffTex);
     glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, moss);    
+    glBindTexture(GL_TEXTURE_2D, normalTex);
+    
+    /*glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, moss);   */ 
 }
 
 void SceneBasic_Uniform::compile()
@@ -117,10 +124,16 @@ void SceneBasic_Uniform::update( float t )
     view = camera.getViewMatrix();
 
     float deltaT = t - tPrev;
+
     if (tPrev == 0.0f) deltaT = 0.0f;
     tPrev = t;
     angle += 0.1f * deltaT;
-    if (angle > glm::two_pi<float>())angle -= glm::two_pi<float>();
+
+    if (this->m_animate)
+    {
+        angle == rotSpeed * deltaT;
+        if (angle > glm::one_over_two_pi<float>()) angle -= glm::two_pi<float>();
+    }
 }
 
 ///////////////////////////////// RENDER
@@ -128,8 +141,9 @@ void SceneBasic_Uniform::render()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    vec4 lightPos = vec4(10.0f * cos(angle), 10.0f, 10.0f * sin(angle), 1.0f);
-    prog.setUniform("Light.Position", vec4(view * lightPos));
+    vec3 cameraPos2 = vec3(-1.0f, 0.25f, 2.0f);
+    view2 = glm::lookAt(cameraPos2, vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
+    prog.setUniform("Light.Position", view2 * glm::vec4(10.0f * cos(angle), 1.0f, 10.0f * sin(angle), 1.0f));
     // Spot lighting
     /*mat3 normalMatrix = mat3(vec3(view[0]), vec3(view[1]), vec3(view[2]));
     prog.setUniform("Spot.Direction", normalMatrix * vec3(-lightPos));*/
@@ -140,9 +154,8 @@ void SceneBasic_Uniform::render()
     prog.setUniform("Material.Shininess", 100.0f);
 
     model = mat4(1.0f);
-    model = glm::rotate(model, glm::radians(-90.0f), vec3(1.0f, 0.0f, 0.0f));
     setMatrices();
-    cube.render();
+    ogre->render();
 
     /*float dist = 0.0f;
     for (int i = 0; i < 5; i++)
