@@ -31,6 +31,10 @@ uniform struct MaterialInfo
     float Shininess;
 }Material;
 
+// For toon shading
+const int levels = 3;
+const float scaleFactor = 1.0 / levels;
+
 //vec3 phongModel( int light, vec3 position, vec3 n)
 //{
     // Ambient calculation
@@ -71,7 +75,9 @@ vec3 blinnphongSpot(vec3 position, vec3 n)
     {
         spotScale = pow(cosAng, Spot.Exponent);
         float sDotN = max(dot(s,n), 0.0);
-        diffuse = Material.Kd * sDotN;
+        //diffuse = Material.Kd * sDotN;
+        // For toon shading
+        diffuse = Material.Kd * floor(sDotN * levels) * scaleFactor;
 
         if (sDotN > 0.0) 
         {   
