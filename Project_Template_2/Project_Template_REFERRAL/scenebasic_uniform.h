@@ -4,6 +4,7 @@
 #include "helper/scene.h"
 #include "helper/torus.h"
 #include "helper/plane.h"
+#include "helper/teapot.h"
 #include "helper/objmesh.h"
 #include "Camera.h"
 
@@ -16,9 +17,12 @@
 class SceneBasic_Uniform : public Scene
 {
 private:
-    //Torus torus;
+    Torus torus;
     Plane plane;
-    std::unique_ptr<ObjMesh> mesh;
+    Teapot teapot;
+    //std::unique_ptr<ObjMesh> mesh;
+    float tPrev;
+    float angle;
 
     // Camera stuff
     float lastTime;

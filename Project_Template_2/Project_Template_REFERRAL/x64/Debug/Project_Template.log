@@ -1,7 +1,3 @@
-﻿  glad.c
-  glslprogram.cpp
-  glutils.cpp
-  main.cpp
-  scenebasic_uniform.cpp
-  Generating Code...
+﻿  scenebasic_uniform.cpp
+C:\GitHub repos\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\scenebasic_uniform.cpp(27,25): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
   Project_Template.vcxproj -> C:\GitHub repos\COMP3015_REF_2\Project_Template_2\Project_Template_REFERRAL\x64\Debug\Project_Template.exe
