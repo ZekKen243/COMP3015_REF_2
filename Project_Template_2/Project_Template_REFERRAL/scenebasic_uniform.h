@@ -26,8 +26,7 @@ private:
 
     SkyBox sky;
     float rotSpeed;
-    std::unique_ptr<ObjMesh> planet;
-    GLuint planetTex;
+    //std::unique_ptr<ObjMesh> ogre;
     float tPrev;
     float angle;
     glm::mat4 view2;
