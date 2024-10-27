@@ -30,10 +30,11 @@ SceneBasic_Uniform::SceneBasic_Uniform() :
     //plane(50.0f, 50.0f, 10.0f, 1, 1),
     //teapot(14, glm::mat4(1.0f)),
     camera(glm::vec3(0.0f, 0.0f, 5.0f), -90.0f, 0.0f),
-    sky(100.0f),
+    // When changing the size in sky, make sure to change the far plane size in projection
+    sky(200.0f),
     lastTime(0.0f) {
 
-    //ogre = ObjMesh::load("media/bs_ears.obj", false, true);
+    planet = ObjMesh::load("media/sphere.obj", false, true);
 
 }
 
@@ -51,6 +52,7 @@ void SceneBasic_Uniform::initScene()
 
     projection = mat4(1.0f);
 
+    planetTex = Texture::loadTexture("media/texture/makemake_tex.png");
     GLuint cubeTex = Texture::loadHdrCubeMap("media/texture/cube/nebula_hdr/neb");
 
     glActiveTexture(GL_TEXTURE0);
@@ -101,21 +103,30 @@ void SceneBasic_Uniform::render()
 
     vec3 cameraPos2 = vec3(-1.0f, 0.25f, 2.0f);
     view2 = glm::lookAt(cameraPos2, vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
+
     prog.use();
     model = mat4(1.0f);
     setMatrices();
     sky.render();
 
-  /* prog.setUniform("Light.Position", view2 * glm::vec4(10.0f * cos(angle), 1.0f, 10.0f * sin(angle), 1.0f));
+    /*prog.setUniform("Light.Position", view2 * glm::vec4(10.0f * cos(angle), 1.0f, 10.0f * sin(angle), 1.0f));
 
     prog.setUniform("Material.Kd", vec3(0.2f, 0.55f, 0.9f));
     prog.setUniform("Material.Ks", vec3(0.95f, 0.95f, 0.95f));
     prog.setUniform("Material.Ka", vec3(0.2f * 0.3f, 0.55f * 0.3f, 0.9f * 0.3f));
-    prog.setUniform("Material.Shininess", 100.0f);
+    prog.setUniform("Material.Shininess", 100.0f);*/
 
-    model = mat4(1.0f);
-    setMatrices();
-    ogre->render();*/
+    // Set up the model matrix for the sphere
+    model = glm::mat4(1.0f);                 // Start with the identity matrix
+    model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));  // Position the sphere at the origin
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, planetTex);
+    //prog.setUniform("material.diffuse", 0);
+
+    setMatrices();  // Apply the transformations for view/projection
+    planet->render();
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 
@@ -125,7 +136,7 @@ void SceneBasic_Uniform::resize(int w, int h)
     width = w;
     height = h;
 
-    projection = glm::perspective(glm::radians(70.0f), (float)w / h, 0.3f, 100.0f);
+    projection = glm::perspective(glm::radians(70.0f), (float)w / h, 0.3f, 1000.0f);
 }
 
 void SceneBasic_Uniform::setMatrices()
