@@ -7,6 +7,7 @@
 #include "helper/teapot.h"
 #include "helper/objmesh.h"
 #include "helper/cube.h"
+#include "helper/skybox.h"
 #include "Camera.h"
 
 #include <glad/glad.h>
@@ -22,8 +23,10 @@ private:
     //Plane plane;
     //Teapot teapot;
     //Cube cube;
+
+    SkyBox sky;
     float rotSpeed;
-    std::unique_ptr<ObjMesh> ogre;
+    //std::unique_ptr<ObjMesh> ogre;
     float tPrev;
     float angle;
     glm::mat4 view2;
