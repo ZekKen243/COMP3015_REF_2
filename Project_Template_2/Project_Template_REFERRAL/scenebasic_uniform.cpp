@@ -168,6 +168,9 @@ void SceneBasic_Uniform::render()
 
     // PLANET //////////////////////////////////////////////////////////////////////////
 
+    prog.setUniform("roughness", 0.3f);  
+    prog.setUniform("metallic", 0.1f);
+
     // Set material properties for the planet
     prog.setUniform("material.Kd", glm::vec3(0.8f, 0.8f, 0.8f));
     prog.setUniform("material.Ka", glm::vec3(0.5f, 0.5f, 0.5f));
