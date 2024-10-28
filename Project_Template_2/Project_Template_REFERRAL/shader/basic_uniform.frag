@@ -17,8 +17,11 @@ struct Material {
 
 uniform Light light;
 uniform Material material;
-uniform sampler2D Texture;
-uniform vec3 CameraPos; // Position of the camera in world space
+uniform sampler2D Texture;         
+uniform sampler2D CloudTexture;    
+uniform int useClouds;             // 1 for planet, 0 for others
+uniform vec3 CameraPos;            
+uniform float time;                
 
 in vec3 FragPos;
 in vec3 Normal;
@@ -31,7 +34,6 @@ void main()
     vec3 norm = normalize(Normal);
 
     // Calculate light direction relative to the fragment’s position in world space
-    // Important because the camera can move around; Make the light fixed
     vec3 lightDir = normalize(light.Position - FragPos);
 
     // View direction from the camera to the fragment
@@ -49,11 +51,23 @@ void main()
     float spec = pow(max(dot(norm, halfwayDir), 0.0), material.Shininess);
     vec3 specular = light.Ls * material.Ks * spec;
 
-    // Combine lighting components
+    // Combine lighting components with emissive color
     vec3 emissiveColor = material.Emissive;
     vec3 lighting = ambient + diffuse + specular + emissiveColor;
 
-    // Apply lighting to the texture color
-    vec3 texColor = texture(Texture, TexCoords).rgb;
-    FragColor = vec4(lighting * texColor, 1.0);
+    // Base planet texture color
+    vec3 baseColor = texture(Texture, TexCoords).rgb;
+
+    // Apply cloud overlay only if useClouds is set
+    if (useClouds == 1) {
+        // Animated cloud texture with horizontal movement
+        vec2 cloudCoords = TexCoords + vec2(time * 0.05, 0.0); // Rotate horizontally
+        vec3 cloudColor = texture(CloudTexture, cloudCoords).rgb;
+
+        // Blend the base and cloud textures (adjust blend factor as needed)
+        baseColor = mix(baseColor, cloudColor, 0.3); // 0.1 for a subtle cloud overlay
+    }
+
+    // Apply lighting to the combined texture color
+    FragColor = vec4(lighting * baseColor, 1.0);
 }

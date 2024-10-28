@@ -54,6 +54,7 @@ void SceneBasic_Uniform::initScene()
     sunTexture = Texture::loadTexture("media/texture/sun.jpg");
     planetTexture = Texture::loadTexture("media/texture/makemake.jpg");
     moonTexture = Texture::loadTexture("media/texture/eris.jpg");
+    cloudTexture = Texture::loadTexture("media/texture/clouds.png");
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, cubeTex);
@@ -63,6 +64,8 @@ void SceneBasic_Uniform::initScene()
     glBindTexture(GL_TEXTURE_2D, planetTexture);
     glActiveTexture(GL_TEXTURE3);
     glBindTexture(GL_TEXTURE_2D, moonTexture);
+    glActiveTexture(GL_TEXTURE4);
+    glBindTexture(GL_TEXTURE_2D, cloudTexture);
 
     // Set light properties in world space, defining its position at the sun's location
     prog.use();
@@ -101,11 +104,13 @@ void SceneBasic_Uniform::update( float t )
     camera.update(deltaTime, glfwGetCurrentContext());
     view = camera.getViewMatrix();
 
-    planetAngle -= planetRotSpeed * deltaTime;
-    orbitAngle += orbitSpeed * deltaTime;
+    //planetAngle -= planetRotSpeed * deltaTime;
+    //orbitAngle += orbitSpeed * deltaTime;
 
     moonAngle -= moonRotSpeed * deltaTime;
     moonOrbitAngle += moonOrbitSpeed * deltaTime;
+
+    prog.setUniform("time", t);
 }
 
 ///////////////////////////////// RENDER
@@ -134,6 +139,7 @@ void SceneBasic_Uniform::render()
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, sunTexture);      // Assuming sunTexture is loaded elsewhere
     prog.setUniform("Texture", 1);                 // Tell shader that "Texture" is bound to texture unit 1
+    prog.setUniform("useClouds", 0);
 
     // Set model transformation for the sun
     model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 5.0f)); // Position the sun
@@ -154,6 +160,11 @@ void SceneBasic_Uniform::render()
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D, planetTexture);
     prog.setUniform("Texture", 2);
+    // Bind the cloud texture to texture unit 4
+    glActiveTexture(GL_TEXTURE4);
+    glBindTexture(GL_TEXTURE_2D, cloudTexture);
+    prog.setUniform("CloudTexture", 4);
+    prog.setUniform("useClouds", 1);
 
     // Set model transformation for the planet
     model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 5.0f)); // Center at the sun's position
@@ -174,6 +185,7 @@ void SceneBasic_Uniform::render()
     glActiveTexture(GL_TEXTURE3);
     glBindTexture(GL_TEXTURE_2D, moonTexture);
     prog.setUniform("Texture", 3);
+    prog.setUniform("useClouds", 0);
 
     model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 5.0f));             // Center at sun position
     model = glm::rotate(model, orbitAngle, glm::vec3(0.0f, 1.0f, 0.0f));              // Orbit around the sun
@@ -205,5 +217,6 @@ void SceneBasic_Uniform::setMatrices()
     prog.setUniform("MVP", projection * mv);
     prog.setUniform("Model", model);
     skyboxProg.setUniform("MVP", projection * viewNoTranslate * model);
+
 
 }

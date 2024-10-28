@@ -27,7 +27,7 @@ private:
     SkyBox sky;
     float rotSpeed;
     std::unique_ptr<ObjMesh> sphere;
-    GLuint sunTexture, planetTexture, moonTexture;
+    GLuint sunTexture, planetTexture, moonTexture, cloudTexture;
 
     // Planet stuff
     float planetAngle = 0.0f; 
