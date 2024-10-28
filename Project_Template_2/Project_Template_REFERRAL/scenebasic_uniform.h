@@ -35,6 +35,7 @@ private:
     float lastTime;
     Camera camera;
     GLSLProgram prog;
+    GLSLProgram skyboxProg;
 
     void setMatrices();
     void compile();

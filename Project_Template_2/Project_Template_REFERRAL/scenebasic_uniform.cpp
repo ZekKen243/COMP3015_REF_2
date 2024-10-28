@@ -65,7 +65,12 @@ void SceneBasic_Uniform::compile()
 		prog.compileShader("shader/basic_uniform.vert");
 		prog.compileShader("shader/basic_uniform.frag");
 		prog.link();
-		prog.use();
+
+        // Compile the skybox shaders
+        skyboxProg.compileShader("shader/skybox.vert");
+        skyboxProg.compileShader("shader/skybox.frag");
+        skyboxProg.link();
+
 	} catch (GLSLProgramException &e) {
 		cerr << e.what() << endl;
 		exit(EXIT_FAILURE);
@@ -101,7 +106,8 @@ void SceneBasic_Uniform::render()
 
     vec3 cameraPos2 = vec3(-1.0f, 0.25f, 2.0f);
     view2 = glm::lookAt(cameraPos2, vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
-    prog.use();
+
+    skyboxProg.use();
     model = mat4(1.0f);
     setMatrices();
     sky.render();
