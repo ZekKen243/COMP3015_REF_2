@@ -74,6 +74,24 @@ void SceneBasic_Uniform::initScene()
     prog.setUniform("light.La", glm::vec3(0.3f, 0.3f, 0.3f));       // Ambient intensity
     prog.setUniform("light.Ls", glm::vec3(1.0f, 0.9f, 0.8f));       // Specular intensity
    
+    //glGenFramebuffers(2, blurFBO);
+    //glGenTextures(2, blurTexture);
+
+    //for (int i = 0; i < 2; i++) {
+    //    glBindFramebuffer(GL_FRAMEBUFFER, blurFBO[i]);
+
+    //    // Create texture for each blur pass
+    //    glBindTexture(GL_TEXTURE_2D, blurTexture[i]);
+    //    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    //    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, blurTexture[i], 0);
+
+    //    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+    //        std::cerr << "Error: Blur framebuffer not complete!" << std::endl;
+    //}
+
+    //glBindFramebuffer(GL_FRAMEBUFFER, 0);  // Unbind framebuffer
 }
 
 void SceneBasic_Uniform::compile()
@@ -88,6 +106,13 @@ void SceneBasic_Uniform::compile()
         skyboxProg.compileShader("shader/skybox.vert");
         skyboxProg.compileShader("shader/skybox.frag");
         skyboxProg.link();
+
+        horizontalBlurShader.compileShader("shader/horizontal_blur.frag");
+        horizontalBlurShader.link();
+
+        verticalBlurShader.compileShader("shader/vertical_blur.frag");
+        verticalBlurShader.link();
+
 
 	} catch (GLSLProgramException &e) {
 		cerr << e.what() << endl;
@@ -134,14 +159,13 @@ void SceneBasic_Uniform::update( float t )
 ///////////////////////////////// RENDER
 void SceneBasic_Uniform::render()
 {
+   /* glBindFramebuffer(GL_FRAMEBUFFER, blurFBO[0]);*/
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glDepthFunc(GL_LEQUAL);
     skyboxProg.use();
     model = skyboxRotationMatrix;
     setMatrices();
     sky.render();
-    glDepthFunc(GL_LESS);
 
     prog.use(); // Use the object shader program
     prog.setUniform("CameraPos", camera.getPosition());
@@ -217,7 +241,32 @@ void SceneBasic_Uniform::render()
     model = glm::scale(model, glm::vec3(0.25f));                                      
     setMatrices();
     sphere->render();
+
+    //glBindFramebuffer(GL_FRAMEBUFFER, 0);  // Unbind
+
+    //// Horizontal blur pass
+    //glBindFramebuffer(GL_FRAMEBUFFER, blurFBO[1]);
+    //horizontalBlurShader.use();
+    //glActiveTexture(GL_TEXTURE0);
+    //glBindTexture(GL_TEXTURE_2D, blurTexture[0]);  // Input texture from the scene pass
+    //horizontalBlurShader.setUniform("scene", 0);
+    //renderQuad();
+
+    //// Vertical blur pass
+    //glBindFramebuffer(GL_FRAMEBUFFER, blurFBO[0]);
+    //verticalBlurShader.use();
+    //glActiveTexture(GL_TEXTURE0);
+    //glBindTexture(GL_TEXTURE_2D, blurTexture[1]);  // Input texture from horizontal pass
+    //verticalBlurShader.setUniform("scene", 0);
+    //renderQuad();
+
+    //// Render blurred result to the default framebuffer
+    //glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //glBindTexture(GL_TEXTURE_2D, blurTexture[0]);
+    //renderQuad();
 }
+
 
 
 void SceneBasic_Uniform::resize(int w, int h)
@@ -239,3 +288,41 @@ void SceneBasic_Uniform::setMatrices()
     prog.setUniform("Model", model);
     skyboxProg.setUniform("MVP", projection * viewNoTranslate * model);
 }
+
+void SceneBasic_Uniform::renderQuad() {
+    if (quadVAO == 0) {
+        // Define vertices for a full-screen quad
+        float quadVertices[] = {
+            // Positions       // Texture Coords
+            -1.0f,  1.0f,  0.0f, 1.0f,
+            -1.0f, -1.0f,  0.0f, 0.0f,
+             1.0f, -1.0f,  1.0f, 0.0f,
+
+            -1.0f,  1.0f,  0.0f, 1.0f,
+             1.0f, -1.0f,  1.0f, 0.0f,
+             1.0f,  1.0f,  1.0f, 1.0f
+        };
+
+        // Generate and bind the VAO and VBO
+        glGenVertexArrays(1, &quadVAO);
+        glGenBuffers(1, &quadVBO);
+        glBindVertexArray(quadVAO);
+
+        glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+
+        // Position attribute
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+
+        // Texture coordinate attribute
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+    }
+
+    // Render the quad
+    glBindVertexArray(quadVAO);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glBindVertexArray(0);
+}
+

@@ -162,10 +162,12 @@
     <ClCompile Include="scenebasic_uniform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="horizontal_blur.frag" />
     <None Include="shader\basic_uniform.frag" />
     <None Include="shader\basic_uniform.vert" />
     <None Include="shader\skybox.frag" />
     <None Include="shader\skybox.vert" />
+    <None Include="vertical_blur.frag" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />

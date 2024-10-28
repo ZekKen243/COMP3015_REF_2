@@ -57,6 +57,15 @@ private:
     GLSLProgram prog;
     GLSLProgram skyboxProg;
 
+    GLuint blurFBO[2];        
+    GLuint blurTexture[2];    
+
+    GLSLProgram horizontalBlurShader; 
+    GLSLProgram verticalBlurShader;
+
+    GLuint quadVAO = 0, quadVBO;
+    void renderQuad();
+
     void setMatrices();
     void compile();
 
