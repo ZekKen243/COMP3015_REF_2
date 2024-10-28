@@ -57,6 +57,17 @@ void SceneBasic_Uniform::initScene()
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, cubeTex);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, sunTexture);
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, planetTexture);
+
+    // Set light properties in world space, defining its position at the sun's location
+    prog.use();
+    prog.setUniform("light.Position", glm::vec3(0.0f, 0.0f, 5.0f)); // World-space position of the sun
+    prog.setUniform("light.Ld", glm::vec3(1.0f, 0.9f, 0.8f));       // Diffuse intensity
+    prog.setUniform("light.La", glm::vec3(0.3f, 0.3f, 0.3f));       // Ambient intensity
+    prog.setUniform("light.Ls", glm::vec3(1.0f, 0.9f, 0.8f));       // Specular intensity
    
 }
 
@@ -97,27 +108,22 @@ void SceneBasic_Uniform::render()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    vec3 cameraPos2 = vec3(-1.0f, 0.25f, 2.0f);
+    //vec3 cameraPos2 = vec3(-1.0f, 0.25f, 2.0f);
     //view2 = glm::lookAt(cameraPos2, vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
-
+    glDepthFunc(GL_LEQUAL);
     skyboxProg.use();
     model = mat4(1.0f);
     setMatrices();
     sky.render();
+    glDepthFunc(GL_LESS);
 
     prog.use(); // Use the object shader program
 
-    // Set light properties directly
-    prog.setUniform("sun.Position", glm::vec3(0.0f, 0.0f, 5.0f));
-    prog.setUniform("sun.Ld", glm::vec3(1.0f, 0.9f, 0.8f)); // Diffuse intensity (warm color)
-    prog.setUniform("sun.La", glm::vec3(0.3f, 0.3f, 0.3f)); // Ambient intensity
-    prog.setUniform("sun.Ls", glm::vec3(1.0f, 0.9f, 0.8f)); // Specular intensity
-
-    // Set material properties for the sun directly
-    prog.setUniform("material.Kd", glm::vec3(1.0f, 1.0f, 1.0f));  // Diffuse color (white)
-    prog.setUniform("material.Ka", glm::vec3(1.0f, 1.0f, 1.0f));  // Ambient color
-    prog.setUniform("material.Ks", glm::vec3(0.8f, 0.8f, 0.8f));  // Specular color
-    prog.setUniform("material.Shininess", 32.0f); // Shininess factor
+    // SUN ////////////////////////////////////////////////////////////////////////////////
+    //prog.setUniform("material.Kd", glm::vec3(1.0f, 1.0f, 1.0f));  // Diffuse color (white)
+    //prog.setUniform("material.Ka", glm::vec3(1.0f, 1.0f, 1.0f));  // Ambient color
+    //prog.setUniform("material.Ks", glm::vec3(0.8f, 0.8f, 0.8f));  // Specular color
+    //prog.setUniform("material.Shininess", 32.0f); // Shininess factor
 
     // Bind the sun texture to texture unit 1
     glActiveTexture(GL_TEXTURE1);
@@ -131,7 +137,7 @@ void SceneBasic_Uniform::render()
 
     sphere->render();
 
-    // Render the Planet
+    // PLANET //////////////////////////////////////////////////////////////////////////
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D, planetTexture);
     prog.setUniform("Texture", 2);
@@ -165,8 +171,10 @@ void SceneBasic_Uniform::resize(int w, int h)
 void SceneBasic_Uniform::setMatrices()
 {
     mat4 mv = view * model;
+    mat4 viewNoTranslate = glm::mat4(glm::mat3(view)); // Remove translation from the view matrix
     prog.setUniform("ModelViewMatrix", mv);
     prog.setUniform("NormalMatrix", glm::mat3(vec3(mv[0]), vec3(mv[1]), vec3(mv[2])));
     prog.setUniform("MVP", projection * mv);
+    skyboxProg.setUniform("MVP", projection * viewNoTranslate * model);
 
 }

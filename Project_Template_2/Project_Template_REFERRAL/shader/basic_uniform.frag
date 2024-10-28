@@ -1,7 +1,7 @@
 #version 460
 
 struct Light {
-    vec3 Position;      // World space position of the light
+    vec3 Position;      // World-space position of the light
     vec3 Ld;            // Diffuse color intensity
     vec3 La;            // Ambient color intensity
     vec3 Ls;            // Specular color intensity
@@ -11,46 +11,46 @@ struct Material {
     vec3 Kd;            // Diffuse reflectivity
     vec3 Ka;            // Ambient reflectivity
     vec3 Ks;            // Specular reflectivity
-    float Shininess;    // Shininess factor for specular highlight size
+    float Shininess;    // Shininess factor
 };
 
-layout (location = 0) out vec4 FragColor;
+uniform Light light;
+uniform Material material;
+uniform sampler2D Texture;
+uniform vec3 CameraPos; // Position of the camera in world space
 
-uniform Light sun;                  // Sun light struct
-uniform Material material;           // Material properties struct
-uniform sampler2D Texture;           // Texture for the object (e.g., sun.png)
-
-in vec2 TexCoords;
 in vec3 FragPos;
 in vec3 Normal;
+in vec2 TexCoords;
+
+out vec4 FragColor;
 
 void main()
 {
-    // Normalize the normal vector
     vec3 norm = normalize(Normal);
 
-    // Calculate the light direction (from fragment to light source)
-    vec3 lightDir = normalize(sun.Position - FragPos);
+    // Calculate light direction relative to the fragment’s position in world space
+    vec3 lightDir = normalize(light.Position - FragPos);
 
-    // Diffuse lighting (Lambertian reflection)
+    // View direction from the camera to the fragment
+    vec3 viewDir = normalize(CameraPos - FragPos);
+
+    // Diffuse lighting calculation
     float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = sun.Ld * material.Kd * diff;
+    vec3 diffuse = light.Ld * material.Kd * diff;
 
-    // Ambient lighting
-    vec3 ambient = sun.La * material.Ka;
+    // Ambient lighting calculation
+    vec3 ambient = light.La * material.Ka;
 
-    // Specular lighting (Blinn-Phong reflection model)
-    vec3 viewDir = normalize(-FragPos); // Assuming the camera is at the origin
+    // Specular lighting (Blinn-Phong)
     vec3 halfwayDir = normalize(lightDir + viewDir);
     float spec = pow(max(dot(norm, halfwayDir), 0.0), material.Shininess);
-    vec3 specular = sun.Ls * material.Ks * spec;
+    vec3 specular = light.Ls * material.Ks * spec;
 
-    // Combine all lighting components
+    // Combine lighting components
     vec3 lighting = ambient + diffuse + specular;
 
-    // Sample the texture color
+    // Apply lighting to the texture color
     vec3 texColor = texture(Texture, TexCoords).rgb;
-
-    // Final color output
     FragColor = vec4(lighting * texColor, 1.0);
 }
