@@ -110,7 +110,7 @@ void SceneBasic_Uniform::update( float t )
     // Toggle rotation on "O" key press
     if (glfwGetKey(glfwGetCurrentContext(), GLFW_KEY_O) == GLFW_PRESS) {
         if (!oKeyPressedLastFrame) {
-            rotatePlanets = !rotatePlanets; // Toggle rotation state
+            rotatePlanets = !rotatePlanets; 
         }
         oKeyPressedLastFrame = true;
     }
@@ -155,13 +155,13 @@ void SceneBasic_Uniform::render()
 
     // Bind the sun texture to texture unit 1
     glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, sunTexture);      // Assuming sunTexture is loaded elsewhere
-    prog.setUniform("Texture", 1);                 // Tell shader that "Texture" is bound to texture unit 1
+    glBindTexture(GL_TEXTURE_2D, sunTexture);      
+    prog.setUniform("Texture", 1);                 
     prog.setUniform("useClouds", 0);
 
     // Set model transformation for the sun
-    model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 5.0f)); // Position the sun
-    model = glm::scale(model, glm::vec3(2.0f));                           // Scale as needed for size
+    model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 5.0f)); 
+    model = glm::scale(model, glm::vec3(2.0f));                           
     setMatrices(); // Apply model, view, and projection matrices
 
     sphere->render();
@@ -169,7 +169,7 @@ void SceneBasic_Uniform::render()
     // PLANET //////////////////////////////////////////////////////////////////////////
 
     prog.setUniform("roughness", 0.3f);  
-    prog.setUniform("metallic", 0.1f);
+    prog.setUniform("metallic", 0.9f);
 
     // Set material properties for the planet
     prog.setUniform("material.Kd", glm::vec3(0.8f, 0.8f, 0.8f));
@@ -208,13 +208,13 @@ void SceneBasic_Uniform::render()
     prog.setUniform("Texture", 3);
     prog.setUniform("useClouds", 0);
 
-    model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 5.0f));             // Center at sun position
-    model = glm::rotate(model, orbitAngle, glm::vec3(0.0f, 1.0f, 0.0f));              // Orbit around the sun
-    model = glm::translate(model, glm::vec3(7.0f, 0.0f, 0.0f));                       // Offset planet position
-    model = glm::rotate(model, moonOrbitAngle, glm::vec3(0.5f, 1.0f, 0.3f));          // Tilted orbit around the planet
-    model = glm::translate(model, glm::vec3(1.5f, 0.0f, 0.0f));                       // Moon distance from the planet
-    model = glm::rotate(model, moonAngle, glm::vec3(0.0f, 1.0f, 0.0f));               // Spin the moon
-    model = glm::scale(model, glm::vec3(0.25f));                                      // Scale down the moon
+    model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 5.0f));             
+    model = glm::rotate(model, orbitAngle, glm::vec3(0.0f, 1.0f, 0.0f));              
+    model = glm::translate(model, glm::vec3(7.0f, 0.0f, 0.0f));                       
+    model = glm::rotate(model, moonOrbitAngle, glm::vec3(0.5f, 1.0f, 0.3f));       // Tilted orbit around the planet
+    model = glm::translate(model, glm::vec3(1.5f, 0.0f, 0.0f));                       
+    model = glm::rotate(model, moonAngle, glm::vec3(0.0f, 1.0f, 0.0f));               
+    model = glm::scale(model, glm::vec3(0.25f));                                      
     setMatrices();
     sphere->render();
 }
@@ -232,12 +232,10 @@ void SceneBasic_Uniform::resize(int w, int h)
 void SceneBasic_Uniform::setMatrices()
 {
     mat4 mv = view * model;
-    mat4 viewNoTranslate = glm::mat4(glm::mat3(view)); // Remove translation from the view matrix
+    mat4 viewNoTranslate = glm::mat4(glm::mat3(view)); 
     prog.setUniform("ModelViewMatrix", mv);
     prog.setUniform("NormalMatrix", glm::mat3(vec3(mv[0]), vec3(mv[1]), vec3(mv[2])));
     prog.setUniform("MVP", projection * mv);
     prog.setUniform("Model", model);
     skyboxProg.setUniform("MVP", projection * viewNoTranslate * model);
-
-
 }

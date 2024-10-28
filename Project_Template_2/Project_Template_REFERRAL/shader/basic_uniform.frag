@@ -1,30 +1,35 @@
 #version 460
 
 struct Light {
-    vec3 Position;      // World-space position of the light
-    vec3 Ld;            // Diffuse 
-    vec3 La;            // Ambient 
-    vec3 Ls;            // Specular 
+    vec3 Position;
+    vec3 Ld;
+    vec3 La;
+    vec3 Ls;
 };
 
 struct Material {
-    vec3 Kd;            // Diffuse reflectivity
-    vec3 Ka;            // Ambient reflectivity
-    vec3 Ks;            // Specular reflectivity
-    float Shininess;    // Shininess factor
-    vec3 Emissive;      // Emissive "glow"
+    vec3 Kd;
+    vec3 Ka;
+    vec3 Ks;
+    float Shininess;
+    vec3 Emissive;
 };
 
 uniform Light light;
 uniform Material material;
-uniform sampler2D Texture;         
-uniform sampler2D CloudTexture;    
-uniform int useClouds;             // 1 for planet, 0 for others
-uniform vec3 CameraPos;            
-uniform float time;    
+uniform sampler2D Texture;
 
-uniform float roughness;    
-uniform float metallic;
+// Allows cloud overlay and blending
+uniform sampler2D CloudTexture;    
+uniform int useClouds;       
+
+// Camera stuff
+uniform vec3 CameraPos;            
+uniform float time;     
+
+// Roughness and Metallic
+uniform float roughness;           
+uniform float metallic;            
 
 in vec3 FragPos;
 in vec3 Normal;
@@ -34,39 +39,37 @@ out vec4 FragColor;
 
 void main()
 {
+    // Keeps the light on the world space; doesn't move with the camera
     vec3 norm = normalize(Normal);
-    vec3 lightDir = normalize(light.Position - FragPos);    // Light direction
-    vec3 viewDir = normalize(CameraPos - FragPos);          // View direction from camera
-    vec3 halfwayDir = normalize(lightDir + viewDir);        // Blinn-Phong halfway vector
+    vec3 lightDir = normalize(light.Position - FragPos);
+    vec3 viewDir = normalize(CameraPos - FragPos);
 
-    // Diffuse (Lambertian)
     float diff = max(dot(norm, lightDir), 0.0);
     vec3 diffuse = light.Ld * material.Kd * diff * (1.0 - metallic * 0.7);
 
-    // Specular with roughness (adjust Shininess based on roughness)
-    float shininessFactor = mix(32.0, 2.0, roughness);   // Higher roughness softens highlights
-    float spec = pow(max(dot(norm, halfwayDir), 0.0), shininessFactor);
-    vec3 specular = light.Ls * material.Ks * spec * (0.5 + metallic * 0.5);
-
-    // Ambient lighting calculation
     vec3 ambient = light.La * (material.Ka + metallic * 0.2);
 
-    // Emissive component (for self-illuminated objects like the sun)
+    vec3 halfwayDir = normalize(lightDir + viewDir);
+    float shininessFactor = mix(2.0, 128.0, 1.0 - roughness);
+    float spec = pow(max(dot(norm, halfwayDir), 0.0), shininessFactor);
+
+    // Fresnel 
+    float fresnelFactor = 0.1;
+    float fresnelIntensity = 2.0;
+    float fresnel = fresnelFactor + (1.0 - fresnelFactor) * pow(1.0 - dot(viewDir, norm), 5.0);
+
+    vec3 specular = light.Ls * material.Ks * spec * mix(1.0, fresnelIntensity, fresnel * metallic);
+
     vec3 emissiveColor = material.Emissive;
+    vec3 lighting = ambient + diffuse + specular + emissiveColor;
 
-    // Mix metallic: blend between diffuse+specular and only specular for metal-like look
-    vec3 lighting = ambient + mix(diffuse + specular, specular, metallic) + emissiveColor;
-
-    // Base planet texture color
     vec3 baseColor = texture(Texture, TexCoords).rgb;
 
-    // Apply cloud overlay only if useClouds is set
     if (useClouds == 1) {
-        vec2 cloudCoords = TexCoords + vec2(time * 0.05, 0.0); // Horizontal scrolling
+        vec2 cloudCoords = TexCoords + vec2(time * 0.05, 0.0); 
         vec3 cloudColor = texture(CloudTexture, cloudCoords).rgb;
-        baseColor = mix(baseColor, cloudColor, 0.4);           // Blend planet and clouds
+        baseColor = mix(baseColor, cloudColor, 0.4); 
     }
 
-    // Final color with lighting applied
     FragColor = vec4(lighting * baseColor, 1.0);
 }
