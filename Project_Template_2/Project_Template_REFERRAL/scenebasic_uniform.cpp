@@ -42,18 +42,18 @@ void SceneBasic_Uniform::initScene()
     compile();
     glEnable(GL_DEPTH_TEST);
 
+    // CAMERA //////////////////////////////////////////////////////////////
     // Initialise move speed and mouse sens
     camera.setMovementSpeed(10.0f);     
     camera.setMouseSensitivity(0.2f);
 
-    //model = mat4(1.0f); // Initialise the model
-    //view = glm::lookAt(vec3(1.0f, 1.25f, 1.25f), vec3(0.0f, 0.2f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
-
     projection = mat4(1.0f);
 
+    // TEXTURES /////////////////////////////////////////////////////////////////
     GLuint cubeTex = Texture::loadHdrCubeMap("media/texture/cube/nebula_hdr/neb");
     sunTexture = Texture::loadTexture("media/texture/sun.jpg");
     planetTexture = Texture::loadTexture("media/texture/makemake.jpg");
+    moonTexture = Texture::loadTexture("media/texture/eris.jpg");
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, cubeTex);
@@ -61,6 +61,8 @@ void SceneBasic_Uniform::initScene()
     glBindTexture(GL_TEXTURE_2D, sunTexture);
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D, planetTexture);
+    glActiveTexture(GL_TEXTURE3);
+    glBindTexture(GL_TEXTURE_2D, moonTexture);
 
     // Set light properties in world space, defining its position at the sun's location
     prog.use();
@@ -101,6 +103,9 @@ void SceneBasic_Uniform::update( float t )
 
     planetAngle -= planetRotSpeed * deltaTime;
     orbitAngle += orbitSpeed * deltaTime;
+
+    moonAngle -= moonRotSpeed * deltaTime;
+    moonOrbitAngle += moonOrbitSpeed * deltaTime;
 }
 
 ///////////////////////////////// RENDER
@@ -138,9 +143,6 @@ void SceneBasic_Uniform::render()
     sphere->render();
 
     // PLANET //////////////////////////////////////////////////////////////////////////
-    glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, planetTexture);
-    prog.setUniform("Texture", 2);
 
     // Set material properties for the planet
     prog.setUniform("material.Kd", glm::vec3(0.8f, 0.8f, 0.8f));
@@ -149,12 +151,37 @@ void SceneBasic_Uniform::render()
     prog.setUniform("material.Shininess", 16.0f);
     prog.setUniform("material.Emissive", glm::vec3(0.0f, 0.0f, 0.0f)); // Planets don't glow
 
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, planetTexture);
+    prog.setUniform("Texture", 2);
+
     // Set model transformation for the planet
     model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 5.0f)); // Center at the sun's position
     model = glm::rotate(model, orbitAngle, glm::vec3(0.0f, 1.0f, 0.0f));  // Orbit rotation around the Y-axis
     model = glm::translate(model, glm::vec3(7.0f, 0.0f, 0.0f));           // Offset the planet from the sun
     model = glm::rotate(model, planetAngle, glm::vec3(0.0f, 1.0f, 0.0f)); // Spin rotation around the Y-axis
     model = glm::scale(model, glm::vec3(0.5f));
+    setMatrices();
+    sphere->render();
+
+    // MOON ////////////////////////////////////////////////////////////////////////
+    prog.setUniform("material.Emissive", glm::vec3(0.0f, 0.0f, 0.0f));
+    prog.setUniform("material.Kd", glm::vec3(0.8f, 0.8f, 0.8f));
+    prog.setUniform("material.Ka", glm::vec3(0.4f, 0.4f, 0.4f));
+    prog.setUniform("material.Ks", glm::vec3(0.2f, 0.2f, 0.2f));
+    prog.setUniform("material.Shininess", 8.0f);
+
+    glActiveTexture(GL_TEXTURE3);
+    glBindTexture(GL_TEXTURE_2D, moonTexture);
+    prog.setUniform("Texture", 3);
+
+    model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 5.0f));             // Center at sun position
+    model = glm::rotate(model, orbitAngle, glm::vec3(0.0f, 1.0f, 0.0f));              // Orbit around the sun
+    model = glm::translate(model, glm::vec3(7.0f, 0.0f, 0.0f));                       // Offset planet position
+    model = glm::rotate(model, moonOrbitAngle, glm::vec3(0.5f, 1.0f, 0.3f));          // Tilted orbit around the planet
+    model = glm::translate(model, glm::vec3(1.5f, 0.0f, 0.0f));                       // Moon distance from the planet
+    model = glm::rotate(model, moonAngle, glm::vec3(0.0f, 1.0f, 0.0f));               // Spin the moon
+    model = glm::scale(model, glm::vec3(0.25f));                                      // Scale down the moon
     setMatrices();
     sphere->render();
 }

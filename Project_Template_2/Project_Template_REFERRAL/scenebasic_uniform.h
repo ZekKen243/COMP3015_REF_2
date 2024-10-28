@@ -27,13 +27,18 @@ private:
     SkyBox sky;
     float rotSpeed;
     std::unique_ptr<ObjMesh> sphere;
-    GLuint sunTexture;
-    GLuint planetTexture;
+    GLuint sunTexture, planetTexture, moonTexture;
 
+    // Planet stuff
     float planetAngle = 0.0f; 
     float planetRotSpeed = glm::radians(150.0f);
     float orbitAngle = 0.0f;      
     float orbitSpeed = glm::radians(10.0f);
+
+    // Moon stuff
+    float moonAngle, moonOrbitAngle;
+    float moonRotSpeed = glm::radians(70.0f); 
+    float moonOrbitSpeed = glm::radians(77.0f);
 
     float tPrev;
     float angle;
