@@ -33,7 +33,7 @@ SceneBasic_Uniform::SceneBasic_Uniform() :
     sky(100.0f),
     lastTime(0.0f) {
 
-    //ogre = ObjMesh::load("media/bs_ears.obj", false, true);
+    sun = ObjMesh::load("media/sphere.obj", false, true);
 
 }
 
@@ -52,6 +52,7 @@ void SceneBasic_Uniform::initScene()
     projection = mat4(1.0f);
 
     GLuint cubeTex = Texture::loadHdrCubeMap("media/texture/cube/nebula_hdr/neb");
+    sunTexture = Texture::loadTexture("media/texture/sun.jpg");
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, cubeTex);
@@ -105,23 +106,38 @@ void SceneBasic_Uniform::render()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     vec3 cameraPos2 = vec3(-1.0f, 0.25f, 2.0f);
-    view2 = glm::lookAt(cameraPos2, vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
+    //view2 = glm::lookAt(cameraPos2, vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
 
     skyboxProg.use();
     model = mat4(1.0f);
     setMatrices();
     sky.render();
 
-  /* prog.setUniform("Light.Position", view2 * glm::vec4(10.0f * cos(angle), 1.0f, 10.0f * sin(angle), 1.0f));
+    prog.use(); // Use the object shader program
 
-    prog.setUniform("Material.Kd", vec3(0.2f, 0.55f, 0.9f));
-    prog.setUniform("Material.Ks", vec3(0.95f, 0.95f, 0.95f));
-    prog.setUniform("Material.Ka", vec3(0.2f * 0.3f, 0.55f * 0.3f, 0.9f * 0.3f));
-    prog.setUniform("Material.Shininess", 100.0f);
+    // Set light properties directly
+    prog.setUniform("sun.Position", glm::vec3(0.0f, 0.0f, 5.0f));
+    prog.setUniform("sun.Ld", glm::vec3(1.0f, 0.9f, 0.8f)); // Diffuse intensity (warm color)
+    prog.setUniform("sun.La", glm::vec3(0.3f, 0.3f, 0.3f)); // Ambient intensity
+    prog.setUniform("sun.Ls", glm::vec3(1.0f, 0.9f, 0.8f)); // Specular intensity
 
-    model = mat4(1.0f);
-    setMatrices();
-    ogre->render();*/
+    // Set material properties for the sun directly
+    prog.setUniform("material.Kd", glm::vec3(1.0f, 1.0f, 1.0f));  // Diffuse color (white)
+    prog.setUniform("material.Ka", glm::vec3(1.0f, 1.0f, 1.0f));  // Ambient color
+    prog.setUniform("material.Ks", glm::vec3(0.8f, 0.8f, 0.8f));  // Specular color
+    prog.setUniform("material.Shininess", 32.0f); // Shininess factor
+
+    // Bind the sun texture to texture unit 1
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, sunTexture);      // Assuming sunTexture is loaded elsewhere
+    prog.setUniform("Texture", 1);                 // Tell shader that "Texture" is bound to texture unit 1
+
+    // Set model transformation for the sun
+    model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 5.0f)); // Position the sun
+    model = glm::scale(model, glm::vec3(1.0f));                           // Scale as needed for size
+    setMatrices(); // Apply model, view, and projection matrices
+
+    sun->render();
 }
 
 

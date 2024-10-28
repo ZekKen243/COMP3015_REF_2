@@ -26,7 +26,8 @@ private:
 
     SkyBox sky;
     float rotSpeed;
-    //std::unique_ptr<ObjMesh> ogre;
+    std::unique_ptr<ObjMesh> sun;
+    GLuint sunTexture;
     float tPrev;
     float angle;
     glm::mat4 view2;
