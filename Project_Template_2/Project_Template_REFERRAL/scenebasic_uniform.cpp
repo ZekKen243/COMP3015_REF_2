@@ -33,7 +33,7 @@ SceneBasic_Uniform::SceneBasic_Uniform() :
     sky(100.0f),
     lastTime(0.0f) {
 
-    sun = ObjMesh::load("media/sphere.obj", false, true);
+    sphere = ObjMesh::load("media/sphere.obj", false, true);
 
 }
 
@@ -53,6 +53,7 @@ void SceneBasic_Uniform::initScene()
 
     GLuint cubeTex = Texture::loadHdrCubeMap("media/texture/cube/nebula_hdr/neb");
     sunTexture = Texture::loadTexture("media/texture/sun.jpg");
+    planetTexture = Texture::loadTexture("media/texture/makemake.jpg");
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, cubeTex);
@@ -87,17 +88,8 @@ void SceneBasic_Uniform::update( float t )
     camera.update(deltaTime, glfwGetCurrentContext());
     view = camera.getViewMatrix();
 
-    float deltaT = t - tPrev;
-
-    if (tPrev == 0.0f) deltaT = 0.0f;
-    tPrev = t;
-    angle += 0.1f * deltaT;
-
-    /*if (this->m_animate)
-    {
-        angle == rotSpeed * deltaT;
-        if (angle > glm::one_over_two_pi<float>()) angle -= glm::two_pi<float>();
-    }*/
+    planetAngle -= planetRotSpeed * deltaTime;
+    orbitAngle += orbitSpeed * deltaTime;
 }
 
 ///////////////////////////////// RENDER
@@ -134,10 +126,30 @@ void SceneBasic_Uniform::render()
 
     // Set model transformation for the sun
     model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 5.0f)); // Position the sun
-    model = glm::scale(model, glm::vec3(1.0f));                           // Scale as needed for size
+    model = glm::scale(model, glm::vec3(2.0f));                           // Scale as needed for size
     setMatrices(); // Apply model, view, and projection matrices
 
-    sun->render();
+    sphere->render();
+
+    // Render the Planet
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, planetTexture);
+    prog.setUniform("Texture", 2);
+
+    // Set material properties for the planet
+    prog.setUniform("material.Kd", glm::vec3(0.8f, 0.8f, 0.8f));
+    prog.setUniform("material.Ka", glm::vec3(0.5f, 0.5f, 0.5f));
+    prog.setUniform("material.Ks", glm::vec3(0.3f, 0.3f, 0.3f));
+    prog.setUniform("material.Shininess", 16.0f);
+
+    // Set model transformation for the planet
+    model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 5.0f)); // Center at the sun's position
+    model = glm::rotate(model, orbitAngle, glm::vec3(0.0f, 1.0f, 0.0f));  // Orbit rotation around the Y-axis
+    model = glm::translate(model, glm::vec3(7.0f, 0.0f, 0.0f));           // Offset the planet from the sun
+    model = glm::rotate(model, planetAngle, glm::vec3(0.0f, 1.0f, 0.0f)); // Spin rotation around the Y-axis
+    model = glm::scale(model, glm::vec3(0.5f));
+    setMatrices();
+    sphere->render();
 }
 
 
