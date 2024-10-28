@@ -2,9 +2,9 @@
 
 struct Light {
     vec3 Position;      // World-space position of the light
-    vec3 Ld;            // Diffuse color intensity
-    vec3 La;            // Ambient color intensity
-    vec3 Ls;            // Specular color intensity
+    vec3 Ld;            // Diffuse 
+    vec3 La;            // Ambient 
+    vec3 Ls;            // Specular 
 };
 
 struct Material {
@@ -12,6 +12,7 @@ struct Material {
     vec3 Ka;            // Ambient reflectivity
     vec3 Ks;            // Specular reflectivity
     float Shininess;    // Shininess factor
+    vec3 Emissive;      // Emissive "glow"
 };
 
 uniform Light light;
@@ -30,6 +31,7 @@ void main()
     vec3 norm = normalize(Normal);
 
     // Calculate light direction relative to the fragment’s position in world space
+    // Important because the camera can move around; Make the light fixed
     vec3 lightDir = normalize(light.Position - FragPos);
 
     // View direction from the camera to the fragment
@@ -48,7 +50,8 @@ void main()
     vec3 specular = light.Ls * material.Ks * spec;
 
     // Combine lighting components
-    vec3 lighting = ambient + diffuse + specular;
+    vec3 emissiveColor = material.Emissive;
+    vec3 lighting = ambient + diffuse + specular + emissiveColor;
 
     // Apply lighting to the texture color
     vec3 texColor = texture(Texture, TexCoords).rgb;

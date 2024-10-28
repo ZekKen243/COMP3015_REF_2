@@ -31,9 +31,9 @@ private:
     GLuint planetTexture;
 
     float planetAngle = 0.0f; 
-    float planetRotSpeed = glm::radians(50.0f);
+    float planetRotSpeed = glm::radians(150.0f);
     float orbitAngle = 0.0f;      
-    float orbitSpeed = glm::radians(5.0f);
+    float orbitSpeed = glm::radians(10.0f);
 
     float tPrev;
     float angle;

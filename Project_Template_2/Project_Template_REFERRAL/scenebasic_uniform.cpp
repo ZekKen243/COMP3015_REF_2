@@ -119,10 +119,11 @@ void SceneBasic_Uniform::render()
     prog.setUniform("CameraPos", camera.getPosition());
 
     // SUN ////////////////////////////////////////////////////////////////////////////////
-    prog.setUniform("material.Kd", glm::vec3(1.0f, 1.0f, 1.0f));  // Diffuse color (white)
-    prog.setUniform("material.Ka", glm::vec3(1.0f, 1.0f, 1.0f));  // Ambient color
-    prog.setUniform("material.Ks", glm::vec3(0.8f, 0.8f, 0.8f));  // Specular color
-    prog.setUniform("material.Shininess", 32.0f); // Shininess factor
+    prog.setUniform("material.Kd", glm::vec3(1.0f, 1.0f, 1.0f));  // Diffuse (white)
+    prog.setUniform("material.Ka", glm::vec3(1.0f, 1.0f, 1.0f));  // Ambient 
+    prog.setUniform("material.Ks", glm::vec3(0.8f, 0.8f, 0.8f));  // Specular 
+    prog.setUniform("material.Shininess", 32.0f); // Shininess 
+    prog.setUniform("material.Emissive", glm::vec3(1.0f, 0.9f, 0.8f)); // Make the sun glow
 
     // Bind the sun texture to texture unit 1
     glActiveTexture(GL_TEXTURE1);
@@ -146,6 +147,7 @@ void SceneBasic_Uniform::render()
     prog.setUniform("material.Ka", glm::vec3(0.5f, 0.5f, 0.5f));
     prog.setUniform("material.Ks", glm::vec3(0.3f, 0.3f, 0.3f));
     prog.setUniform("material.Shininess", 16.0f);
+    prog.setUniform("material.Emissive", glm::vec3(0.0f, 0.0f, 0.0f)); // Planets don't glow
 
     // Set model transformation for the planet
     model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 5.0f)); // Center at the sun's position
