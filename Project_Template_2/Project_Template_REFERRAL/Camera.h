@@ -13,6 +13,7 @@ public:
 
     // Return view matrix calculated using camera pos and orientation
     glm::mat4 getViewMatrix() const;
+    glm::vec3 getPosition() const;
 
     // Keyboard and mouse movement processing
     void processKeyboard(float deltaTime, GLFWwindow* window);

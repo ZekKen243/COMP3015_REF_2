@@ -14,6 +14,10 @@ glm::mat4 Camera::getViewMatrix() const {
     return glm::lookAt(position, position + front, up);
 }
 
+glm::vec3 Camera::getPosition() const {
+    return position;
+}
+
 //////////////////// WASD MOVEMENT + UP AND DOWN
 void Camera::processKeyboard(float deltaTime, GLFWwindow* window) {
     float velocity = movementSpeed * deltaTime;

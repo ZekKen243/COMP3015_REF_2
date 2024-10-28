@@ -108,8 +108,6 @@ void SceneBasic_Uniform::render()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    //vec3 cameraPos2 = vec3(-1.0f, 0.25f, 2.0f);
-    //view2 = glm::lookAt(cameraPos2, vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
     glDepthFunc(GL_LEQUAL);
     skyboxProg.use();
     model = mat4(1.0f);
@@ -118,12 +116,13 @@ void SceneBasic_Uniform::render()
     glDepthFunc(GL_LESS);
 
     prog.use(); // Use the object shader program
+    prog.setUniform("CameraPos", camera.getPosition());
 
     // SUN ////////////////////////////////////////////////////////////////////////////////
-    //prog.setUniform("material.Kd", glm::vec3(1.0f, 1.0f, 1.0f));  // Diffuse color (white)
-    //prog.setUniform("material.Ka", glm::vec3(1.0f, 1.0f, 1.0f));  // Ambient color
-    //prog.setUniform("material.Ks", glm::vec3(0.8f, 0.8f, 0.8f));  // Specular color
-    //prog.setUniform("material.Shininess", 32.0f); // Shininess factor
+    prog.setUniform("material.Kd", glm::vec3(1.0f, 1.0f, 1.0f));  // Diffuse color (white)
+    prog.setUniform("material.Ka", glm::vec3(1.0f, 1.0f, 1.0f));  // Ambient color
+    prog.setUniform("material.Ks", glm::vec3(0.8f, 0.8f, 0.8f));  // Specular color
+    prog.setUniform("material.Shininess", 32.0f); // Shininess factor
 
     // Bind the sun texture to texture unit 1
     glActiveTexture(GL_TEXTURE1);
@@ -175,6 +174,7 @@ void SceneBasic_Uniform::setMatrices()
     prog.setUniform("ModelViewMatrix", mv);
     prog.setUniform("NormalMatrix", glm::mat3(vec3(mv[0]), vec3(mv[1]), vec3(mv[2])));
     prog.setUniform("MVP", projection * mv);
+    prog.setUniform("Model", model);
     skyboxProg.setUniform("MVP", projection * viewNoTranslate * model);
 
 }
