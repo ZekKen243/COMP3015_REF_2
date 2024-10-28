@@ -29,11 +29,18 @@ private:
     std::unique_ptr<ObjMesh> sphere;
     GLuint sunTexture, planetTexture, moonTexture, cloudTexture;
 
+    float rotationSpeed = 0.35f;
+    float diagonalAngle;
+    glm::mat4 skyboxRotationMatrix;
+
     // Planet stuff
     float planetAngle = 0.0f; 
     float planetRotSpeed = glm::radians(150.0f);
     float orbitAngle = 0.0f;      
     float orbitSpeed = glm::radians(10.0f);
+
+    bool rotatePlanets = false;
+    bool oKeyPressedLastFrame = false;
 
     // Moon stuff
     float moonAngle, moonOrbitAngle;

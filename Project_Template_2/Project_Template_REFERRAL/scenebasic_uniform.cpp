@@ -104,13 +104,31 @@ void SceneBasic_Uniform::update( float t )
     camera.update(deltaTime, glfwGetCurrentContext());
     view = camera.getViewMatrix();
 
-    //planetAngle -= planetRotSpeed * deltaTime;
-    //orbitAngle += orbitSpeed * deltaTime;
+    diagonalAngle = t * rotationSpeed;
+    skyboxRotationMatrix = glm::rotate(glm::mat4(1.0f), diagonalAngle, glm::normalize(vec3(1.0f, 1.0f, 0.0f)));
+
+    // Toggle rotation on "O" key press
+    if (glfwGetKey(glfwGetCurrentContext(), GLFW_KEY_O) == GLFW_PRESS) {
+        if (!oKeyPressedLastFrame) {
+            rotatePlanets = !rotatePlanets; // Toggle rotation state
+        }
+        oKeyPressedLastFrame = true;
+    }
+    else {
+        oKeyPressedLastFrame = false;
+    }
+
+    // Update planet rotation and orbit if toggled on
+    if (rotatePlanets) {
+        planetAngle -= planetRotSpeed * deltaTime;
+        orbitAngle += orbitSpeed * deltaTime;
+    }
 
     moonAngle -= moonRotSpeed * deltaTime;
     moonOrbitAngle += moonOrbitSpeed * deltaTime;
 
     prog.setUniform("time", t);
+
 }
 
 ///////////////////////////////// RENDER
@@ -120,7 +138,7 @@ void SceneBasic_Uniform::render()
 
     glDepthFunc(GL_LEQUAL);
     skyboxProg.use();
-    model = mat4(1.0f);
+    model = skyboxRotationMatrix;
     setMatrices();
     sky.render();
     glDepthFunc(GL_LESS);

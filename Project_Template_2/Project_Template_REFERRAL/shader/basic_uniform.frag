@@ -60,14 +60,12 @@ void main()
 
     // Apply cloud overlay only if useClouds is set
     if (useClouds == 1) {
-        // Animated cloud texture with horizontal movement
-        vec2 cloudCoords = TexCoords + vec2(time * 0.05, 0.0); // Rotate horizontally
+        // Animated cloud
+        vec2 cloudCoords = TexCoords + vec2(time * 0.05, 0.0); 
         vec3 cloudColor = texture(CloudTexture, cloudCoords).rgb;
 
-        // Blend the base and cloud textures (adjust blend factor as needed)
-        baseColor = mix(baseColor, cloudColor, 0.3); // 0.1 for a subtle cloud overlay
+        baseColor = mix(baseColor, cloudColor, 0.4); 
     }
 
-    // Apply lighting to the combined texture color
     FragColor = vec4(lighting * baseColor, 1.0);
 }
